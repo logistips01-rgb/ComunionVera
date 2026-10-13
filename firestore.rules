@@ -10,7 +10,7 @@ service cloud.firestore {
     function esAdmin() {
       return request.auth != null
         && request.auth.token.email_verified == true
-        && request.auth.token.email in ['tu-correo@gmail.com'];
+        && request.auth.token.email in ['veracomunion@gmail.com'];
     }
 
     function texto(campo, max) {

@@ -18,7 +18,7 @@ export const firebaseConfig = {
 
 // 2) Correos que pueden entrar al panel de organización (admin.html).
 //    ¡Pon los mismos en firestore.rules!
-export const admins = ["tu-correo@gmail.com"];
+export const admins = ["veracomunion@gmail.com"];
 
 // 3) Datos del evento.
 export const evento = {

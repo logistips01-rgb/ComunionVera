@@ -38,16 +38,16 @@ Mientras Firebase no esté conectado, la web funciona en **modo demo**
 5. **Tu correo de administrador:** cámbialo en `public/js/config.js` (`admins`)
    **y** en `firestore.rules` (`tu-correo@gmail.com`).
 6. Si el ID del proyecto no es `comunion-vera`, cámbialo en `.firebaserc`.
-7. **Publicar** (necesitas [Node.js](https://nodejs.org) instalado):
+7. **Publicación automática:** cada cambio que se sube a GitHub se publica solo
+   (`.github/workflows/publicar.yml`). Solo hace falta configurarlo una vez:
+   - Firebase → ⚙️ Configuración del proyecto → **Cuentas de servicio** →
+     **Generar nueva clave privada** (se descarga un `.json`).
+   - GitHub → el repositorio → **Settings → Secrets and variables → Actions →
+     New repository secret**. Nombre: `FIREBASE_SERVICE_ACCOUNT`; valor: todo
+     el contenido del `.json`. Después borra el archivo de tu ordenador.
 
-   ```bash
-   npm install -g firebase-tools
-   firebase login
-   firebase deploy
-   ```
-
-   Al terminar te dará la URL `https://<tu-proyecto>.web.app` 🎉
-   Para actualizar la web tras cualquier cambio, vuelve a ejecutar `firebase deploy`.
+   La web queda en **https://comunion-vera.web.app** y el panel en
+   **https://comunion-vera.web.app/admin**.
 
 ## Privacidad y seguridad
 

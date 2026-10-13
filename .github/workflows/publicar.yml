@@ -1,0 +1,40 @@
+# Publica la web en https://comunion-vera.web.app cada vez que se sube un cambio.
+name: Publicar en Firebase
+
+on:
+  push:
+    branches: [main, claude/busy-galileo-l1pe5x]
+  workflow_dispatch:
+
+concurrency:
+  group: publicar
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Preparar credenciales
+        env:
+          CUENTA_SERVICIO: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$CUENTA_SERVICIO" ]; then
+            echo "::error::Falta el secreto FIREBASE_SERVICE_ACCOUNT (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+          printf '%s' "$CUENTA_SERVICIO" > "$RUNNER_TEMP/cuenta-servicio.json"
+
+      - name: Publicar web y reglas de seguridad
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/cuenta-servicio.json
+        run: npx --yes firebase-tools@14 deploy --only hosting,firestore:rules --project comunion-vera --non-interactive
+
+      - name: Borrar credenciales
+        if: always()
+        run: rm -f "$RUNNER_TEMP/cuenta-servicio.json"
