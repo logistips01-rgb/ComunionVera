@@ -6,13 +6,12 @@
   --oro: #1d1d1d; --oro-claro: #e2e2e2; --salvia: #5f6b5a; --rosa: #e2e2e2;
   --halo-1: transparent; --halo-2: transparent;
   --serif: "Cormorant Garamond", Georgia, serif; --sans: "Jost", system-ui, sans-serif;
-  --nombre-fuente: "Cormorant Garamond", Georgia, serif;
   --radio: 2px; --sombra: none;
 }
-.nombre { font-weight: 400; text-transform: uppercase; letter-spacing: 0.3em; font-size: clamp(3rem, 14vw, 5rem); margin-right: -0.3em; }
+.titular { font-weight: 300; }
+.nombre { font-style: normal; color: var(--texto); }
+.portada-foto img { filter: grayscale(0.15); }
 h2 { font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; font-size: clamp(1.5rem, 5vw, 2rem); }
 .tarjeta, .formulario, .cuenta-atras > div, .crear-invitacion { border: 1px solid #e2e2e2; box-shadow: none; }
-.marco-foto { background: none; padding: 0; box-shadow: none; border-radius: 0; aspect-ratio: 4 / 5; }
-.marco-foto img { border-radius: 0; border: none; }
 .boton { border-radius: 0; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; font-size: 0.8rem; }
 .nota { border-left-width: 2px; box-shadow: none; border: 1px solid #ececec; border-left: 2px solid #1d1d1d; }

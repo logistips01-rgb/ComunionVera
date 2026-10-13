@@ -29,6 +29,7 @@ export const evento = {
   fecha: "2027-05-15T12:00:00+02:00",
   fechaTexto: "Sábado, 15 de mayo de 2027",
   frase: "“Dejad que los niños se acerquen a mí” — Mc 10, 14",
+  bienvenida: "Un día especial para compartir con las personas que más queremos. Nos alegra tenerte aquí.",
   mensaje:
     "Me haría muchísima ilusión que me acompañaras en este día tan especial para mí y para mi familia.",
   ceremonia: {

@@ -8,4 +8,5 @@
   --serif: "Playfair Display", Georgia, serif; --script: "Parisienne", cursive; --sans: "Lato", system-ui, sans-serif;
   --radio: 22px;
 }
-.marco-foto { background: linear-gradient(135deg, #e7b7bd, #fbe9ea, #c98b94); }
+.nombre { font-family: var(--script); font-style: normal; font-size: 1.15em; }
+.titular { font-weight: 400; }

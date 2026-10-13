@@ -13,7 +13,7 @@
   --radio: 18px;
   --halo-1: rgba(233, 201, 195, 0.45);
   --halo-2: rgba(143, 165, 138, 0.25);
-  --nombre-fuente: var(--script);
+  --nombre-fuente: var(--serif);
   --serif: "Cormorant Garamond", Georgia, serif;
   --script: "Great Vibes", cursive;
   --sans: "Nunito", system-ui, sans-serif;
@@ -58,39 +58,39 @@ a { color: var(--oro); }
 }
 .menu-nav a:hover { background: var(--oro-claro); }
 
-/* Portada */
-.portada {
-  text-align: center;
-  padding: 3rem 1rem 3.5rem;
-  background:
-    radial-gradient(circle at 15% 10%, var(--halo-1), transparent 40%),
-    radial-gradient(circle at 85% 30%, var(--halo-2), transparent 40%),
-    var(--fondo);
+/* Portada: foto grande que se funde con el fondo */
+.portada { background: var(--fondo); }
+.portada-foto { position: relative; height: min(68vh, 560px); overflow: hidden; }
+.portada-foto img {
+  width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; display: block;
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
 }
-.saludo { font-family: var(--serif); font-size: 1.5rem; font-style: italic; margin: 0 0 0.5rem; }
-.subtitulo { letter-spacing: 0.25em; text-transform: uppercase; color: var(--suave); font-size: 0.85rem; margin: 0; }
-.nombre {
-  font-family: var(--nombre-fuente);
-  font-weight: 400;
-  font-size: clamp(4.5rem, 20vw, 7.5rem);
-  color: var(--oro);
-  line-height: 1.1;
-  margin: 0.25rem 0 1rem;
+.portada-texto { padding: 0.5rem 1.5rem 3rem; max-width: 560px; }
+.saludo { font-family: var(--serif); font-size: 1.4rem; font-style: italic; color: var(--oro); margin: 0 0 0.75rem; }
+.antetitulo { letter-spacing: 0.28em; text-transform: uppercase; color: var(--oro); font-size: 0.72rem; font-weight: 600; margin: 0 0 1rem; }
+.titular {
+  font-family: var(--serif); font-weight: 300; color: var(--texto);
+  font-size: clamp(2.6rem, 11vw, 5.4rem); line-height: 1.05; margin: 0;
 }
-.marco-foto {
-  width: min(260px, 70vw); aspect-ratio: 1;
-  margin: 0 auto 1.5rem;
-  border-radius: 50%;
-  padding: 8px;
-  background: linear-gradient(135deg, var(--oro), var(--oro-claro), var(--oro));
-  box-shadow: var(--sombra);
+.nombre { font-family: var(--nombre-fuente); font-style: italic; font-weight: 400; color: var(--oro); }
+.raya { width: 40px; height: 1px; background: var(--oro); margin: 1.75rem 0 1.25rem; }
+.entradilla { color: var(--suave); max-width: 300px; margin: 0 0 1.25rem; line-height: 1.7; }
+.dato-fecha { letter-spacing: 0.18em; text-transform: uppercase; color: var(--oro); font-size: 0.78rem; font-weight: 700; margin: 0; }
+.dato-lugar { color: var(--suave); font-size: 0.88rem; margin: 0.15rem 0 1.75rem; }
+.portada .cuenta-atras { justify-content: flex-start; }
+.cuenta-atras > div { text-align: center; }
+
+@media (min-width: 900px) {
+  .portada { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 48px); align-items: center; }
+  .portada-foto { height: 100%; min-height: calc(100vh - 48px); }
+  .portada-foto img {
+    position: absolute; inset: 0;
+    -webkit-mask-image: linear-gradient(to right, #000 60%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 60%, transparent 100%);
+  }
+  .portada-texto { padding: 3rem 3rem 3rem 2rem; }
 }
-.marco-foto img {
-  width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%;
-  border-radius: 50%; border: 4px solid var(--fondo); display: block;
-}
-.fecha { font-family: var(--serif); font-size: 1.6rem; margin: 0; }
-.frase { font-family: var(--serif); font-style: italic; color: var(--suave); margin: 0.25rem 0 1.75rem; }
 
 .cuenta-atras { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; }
 .cuenta-atras > div {
@@ -102,7 +102,7 @@ a { color: var(--oro); }
 }
 .cuenta-atras span { display: block; font-family: var(--serif); font-size: 2rem; font-weight: 600; color: var(--oro); line-height: 1; }
 .cuenta-atras small { color: var(--suave); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.1em; }
-.hoy { font-family: var(--serif); font-size: 1.8rem; color: var(--oro); }
+.hoy { font-family: var(--serif); font-size: 1.8rem; color: var(--oro); margin: 0; }
 
 /* Secciones */
 .seccion { padding: 3.5rem 1rem; max-width: 960px; margin: 0 auto; }
@@ -373,3 +373,4 @@ th { background: var(--fondo-alt); font-weight: 700; }
 .ajustes-diseno { text-align: left; display: grid; gap: 1rem; margin-bottom: 2rem; }
 .ajustes-diseno .suave { margin: 0; font-size: 0.88rem; overflow-wrap: anywhere; }
 .ajustes-diseno .boton { justify-self: start; }
+.cita { text-align: center; font-family: var(--serif); font-style: italic; color: var(--suave); margin: -1rem auto 2rem; }

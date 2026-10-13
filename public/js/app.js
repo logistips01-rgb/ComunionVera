@@ -12,6 +12,8 @@ $$("[data-evento]").forEach((el) => (el.textContent = evento[el.dataset.evento] 
 $$("[data-lugar]").forEach((el) => (el.textContent = obtener(evento, el.dataset.lugar) ?? ""));
 $$("[data-mapa]").forEach((el) => (el.href = evento[el.dataset.mapa].mapa));
 $("#foto").src = evento.foto;
+$("#antetitulo").textContent = `Primera Comunión · ${new Date(evento.fecha).getFullYear()}`;
+$("#dato-lugar").textContent = `${evento.ceremonia.lugar} · ${evento.ceremonia.hora}`;
 
 // Saludo personalizado: index.html?para=Tíos%20Juan%20y%20Marta
 const para = new URLSearchParams(location.search).get("para");

@@ -13,7 +13,7 @@
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
   <script>
     // Aplica el diseño cuanto antes para que no se vea un parpadeo:
@@ -41,20 +41,23 @@
 
   <!-- PORTADA -->
   <header class="portada">
-    <p class="saludo" id="saludo-personal" hidden></p>
-    <p class="subtitulo" data-evento="titulo"></p>
-    <h1 class="nombre" data-evento="nombre"></h1>
-    <div class="marco-foto">
+    <div class="portada-foto">
       <img id="foto" alt="Foto de Vera" />
     </div>
-    <p class="fecha" data-evento="fechaTexto"></p>
-    <p class="frase" data-evento="frase"></p>
-
-    <div class="cuenta-atras" id="cuenta-atras" aria-live="polite">
-      <div><span id="cd-dias">0</span><small>días</small></div>
-      <div><span id="cd-horas">0</span><small>horas</small></div>
-      <div><span id="cd-min">0</span><small>min</small></div>
-      <div><span id="cd-seg">0</span><small>seg</small></div>
+    <div class="portada-texto">
+      <p class="saludo" id="saludo-personal" hidden></p>
+      <p class="antetitulo" id="antetitulo"></p>
+      <h1 class="titular">Bienvenidos<br />a la Comunión<br />de <em class="nombre" data-evento="nombre"></em></h1>
+      <div class="raya" aria-hidden="true"></div>
+      <p class="entradilla" data-evento="bienvenida"></p>
+      <p class="dato-fecha" data-evento="fechaTexto"></p>
+      <p class="dato-lugar" id="dato-lugar"></p>
+      <div class="cuenta-atras" id="cuenta-atras" aria-live="polite">
+        <div><span id="cd-dias">0</span><small>días</small></div>
+        <div><span id="cd-horas">0</span><small>horas</small></div>
+        <div><span id="cd-min">0</span><small>min</small></div>
+        <div><span id="cd-seg">0</span><small>seg</small></div>
+      </div>
     </div>
   </header>
 
@@ -63,6 +66,7 @@
     <section id="invitacion" class="seccion">
       <h2>Invitación</h2>
       <p class="intro" data-evento="mensaje"></p>
+      <p class="cita" data-evento="frase"></p>
       <div class="tarjetas-dos">
         <article class="tarjeta">
           <svg class="icono-linea" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6v36M14 17h20"/></svg>
