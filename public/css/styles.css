@@ -74,6 +74,7 @@ a { color: var(--oro); }
   font-size: clamp(2.6rem, 11vw, 5.4rem); line-height: 1.05; margin: 0;
 }
 .nombre { font-family: var(--nombre-fuente); font-style: italic; font-weight: 400; color: var(--oro); }
+.titular-propio { display: none; }
 .raya { width: 40px; height: 1px; background: var(--oro); margin: 1.75rem 0 1.25rem; }
 .entradilla { color: var(--suave); max-width: 300px; margin: 0 0 1.25rem; line-height: 1.7; }
 .dato-fecha { letter-spacing: 0.18em; text-transform: uppercase; color: var(--oro); font-size: 0.78rem; font-weight: 700; margin: 0; }

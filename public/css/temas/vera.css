@@ -1,0 +1,33 @@
+/* Vera: colores de su foto (violeta del mantón, fucsia de los claveles, crema de la falda) */
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Alex+Brush&family=Outfit:wght@300;400;500;600&display=swap");
+:root {
+  --fondo: #fbf7f2; --fondo-alt: #f3ebf3; --tarjeta: #ffffff;
+  --texto: #2e2238; --suave: #7a6b80;
+  --oro: #5b2a86; --oro-claro: #e2d3ec; --salvia: #c2185b; --rosa: #f6c9da;
+  --halo-1: rgba(194, 24, 91, 0.12); --halo-2: rgba(91, 42, 134, 0.12);
+  --serif: "Fraunces", Georgia, serif; --script: "Alex Brush", cursive; --sans: "Outfit", system-ui, sans-serif;
+  --radio: 20px;
+}
+h1, h2, h3 { font-weight: 400; }
+h2 { color: var(--oro); }
+
+/* Titular propio: "Mi Primera Comunión" + Vera en caligrafía fucsia */
+.titular { display: none; }
+.titular-propio { display: block; }
+.tp-linea { display: block; font-family: var(--serif); font-weight: 300; font-size: clamp(1.6rem, 7vw, 2.6rem); color: var(--texto); line-height: 1.1; }
+.tp-nombre {
+  display: block; font-family: var(--script); color: #c2185b;
+  font-size: clamp(5.5rem, 28vw, 10rem); line-height: 0.9; margin: 0.1em 0 0 -0.04em;
+}
+.antetitulo { display: none; }
+.raya { background: linear-gradient(90deg, #c2185b, #5b2a86); width: 56px; height: 2px; }
+.dato-fecha { color: var(--oro); }
+
+/* Foto con un toque cálido en el borde del degradado */
+.portada { background: linear-gradient(180deg, #f3ebf3 0%, var(--fondo) 60%); }
+.boton { background: #5b2a86; border-color: #5b2a86; }
+.boton-suave { background: transparent; color: #5b2a86; }
+.cuenta-atras span { color: #c2185b; }
+.nota:nth-child(3n + 1) { border-left-color: #c2185b; }
+.nota:nth-child(3n + 2) { border-left-color: #5b2a86; }
+.etiqueta-reservado { background: #c2185b; }

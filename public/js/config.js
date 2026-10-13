@@ -100,4 +100,5 @@ export const temas = [
   { id: "minimalista", nombre: "Minimalista", colores: ["#ffffff", "#e2e2e2", "#1d1d1d"] },
   { id: "celeste", nombre: "Celeste", colores: ["#f6f9fc", "#cddff0", "#4a77a3"] },
   { id: "campestre", nombre: "Campestre", colores: ["#f7f4ec", "#d7dcc2", "#6f7f4f"] },
+  { id: "vera", nombre: "Vera", colores: ["#fbf7f2", "#c2185b", "#5b2a86"] },
 ];
