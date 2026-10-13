@@ -268,25 +268,57 @@ th { background: var(--fondo-alt); font-weight: 700; }
 .acceso-admin:hover { color: var(--oro); }
 
 /* Fotos */
-.subir-fotos { max-width: 420px; margin: 0 auto 2rem; display: grid; gap: 0.75rem; text-align: center; }
+.subir-fotos { max-width: 460px; margin: 0 auto 3rem; display: grid; gap: 0.75rem; text-align: center; }
 .subir-fotos input[type="text"] { margin-top: 0; }
 .subir-fotos label.boton { display: block; }
-.enlace-album { font-size: 0.9rem; }
-.galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.5rem; }
+.album { border-top: 1px solid var(--fondo-alt); padding-top: 1rem; margin-top: 0.25rem; }
+.album p { margin: 0 0 0.6rem; font-size: 0.9rem; }
+.titulo-galeria { text-align: center; color: var(--oro); font-size: 1.9rem; margin-bottom: 0.25rem; }
+.galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.5rem; margin-top: 1.25rem; }
 .galeria button {
-  padding: 0; border: none; background: var(--fondo-alt); cursor: zoom-in;
+  position: relative; padding: 0; border: none; background: var(--fondo-alt); cursor: zoom-in;
   aspect-ratio: 1; border-radius: 10px; overflow: hidden;
 }
 .galeria img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.2s; }
 .galeria button:hover img { transform: scale(1.04); }
-.visor { width: auto; max-width: 96vw; padding: 0.5rem; background: #111; }
-.visor::backdrop { background: rgba(0, 0, 0, 0.85); }
-.visor img { display: block; max-width: calc(96vw - 1rem); max-height: 82vh; margin: 0 auto; border-radius: 8px; }
-.visor-pie { color: #ddd; text-align: center; margin: 0.5rem 0 0; font-size: 0.9rem; }
+.contador {
+  position: absolute; left: 0.4rem; bottom: 0.4rem;
+  background: rgba(255, 255, 255, 0.92); color: var(--texto);
+  font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 999px;
+}
+
+/* Visor */
+.visor { width: min(1100px, 96vw); max-width: none; max-height: 94vh; padding: 0; overflow: hidden; background: var(--tarjeta); }
+.visor::backdrop { background: rgba(20, 16, 10, 0.88); }
+.visor-cuerpo { display: grid; grid-template-columns: 1fr 320px; height: min(86vh, 760px); }
+.visor-foto { position: relative; background: #141210; display: grid; grid-template: 100% / 100%; place-items: center; min-height: 0; overflow: hidden; }
+.visor-foto img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.visor-flecha {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 2.6rem; height: 2.6rem; border-radius: 50%; border: none; cursor: pointer;
+  background: rgba(255, 255, 255, 0.85); color: var(--texto); display: grid; place-items: center;
+}
+.visor-flecha.anterior { left: 0.6rem; }
+.visor-flecha.siguiente { right: 0.6rem; }
+.visor-lado { display: flex; flex-direction: column; min-height: 0; padding: 1.25rem 1rem 1rem; }
+.visor-autor { font-family: var(--serif); font-size: 1.3rem; color: var(--oro); margin: 0 2.5rem 0.75rem 0; }
+.comentarios { flex: 1; overflow-y: auto; min-height: 3rem; border-top: 1px solid var(--fondo-alt); padding-top: 0.75rem; }
+.comentario { margin: 0 0 0.6rem; font-size: 0.92rem; overflow-wrap: anywhere; }
+.comentario strong { color: var(--texto); }
+.form-comentario { display: grid; gap: 0.5rem; padding-top: 0.75rem; border-top: 1px solid var(--fondo-alt); }
+.form-comentario input, .form-comentario textarea { margin-top: 0; }
+.form-comentario .estado { min-height: 0; font-size: 0.85rem; }
 .visor-cerrar {
-  position: absolute; top: 0.5rem; right: 0.5rem; z-index: 1;
-  width: 2.4rem; height: 2.4rem; border-radius: 50%; border: none;
-  background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 1.1rem; cursor: pointer;
+  position: absolute; top: 0.6rem; right: 0.6rem; z-index: 2;
+  width: 2.4rem; height: 2.4rem; border-radius: 50%; border: none; cursor: pointer;
+  background: var(--fondo-alt); color: var(--texto);
+}
+@media (max-width: 760px) {
+  .visor { width: 100vw; max-height: 100dvh; height: 100dvh; border-radius: 0; overflow-y: auto; }
+  .visor-cuerpo { grid-template-columns: 1fr; height: auto; }
+  .visor-foto { height: 58dvh; }
+  .comentarios { max-height: 30dvh; }
+  .visor-cerrar { background: rgba(255, 255, 255, 0.85); }
 }
 .fotos-admin { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; margin-bottom: 2rem; }
 .fotos-admin figure { margin: 0; background: var(--tarjeta); border-radius: 12px; overflow: hidden; box-shadow: var(--sombra); }

@@ -98,7 +98,7 @@ export async function enviarMensaje(nombre, texto) {
 // ---------- Fotos de los invitados ----------
 // Cada foto se guarda en dos documentos: "fotos" (miniatura, para la galería)
 // y "fotosGrandes" (la imagen a buen tamaño, solo se descarga al abrirla).
-const demoFotos = { lista: [], grandes: {} }; // en modo demo solo viven en memoria
+const demoFotos = { lista: [], grandes: {}, comentarios: {} }; // en modo demo solo viven en memoria
 
 // Llama a cb(lista) con las últimas `limite` fotos. Devuelve una función para dejar de escuchar.
 export async function escucharFotos(limite, cb) {
@@ -149,12 +149,65 @@ export async function borrarFoto(id) {
   if (modoDemo) {
     demoFotos.lista = demoFotos.lista.filter((f) => f.id !== id);
     delete demoFotos.grandes[id];
+    delete demoFotos.comentarios[id];
     demo.avisar("fotos");
     return;
   }
+  const comentarios = await fs.getDocs(fs.collection(db, "fotos", id, "comentarios"));
   const lote = fs.writeBatch(db);
+  comentarios.docs.forEach((c) => lote.delete(c.ref));
   lote.delete(fs.doc(db, "fotos", id));
   lote.delete(fs.doc(db, "fotosGrandes", id));
+  await lote.commit();
+}
+
+// ---------- Comentarios de las fotos ----------
+export async function escucharComentariosFoto(fotoId, cb) {
+  if (modoDemo) {
+    const avisar = () => cb(demoFotos.comentarios[fotoId] || []);
+    (demo.oyentes.fotos ||= []).push(avisar);
+    avisar();
+    return () => (demo.oyentes.fotos = demo.oyentes.fotos.filter((f) => f !== avisar));
+  }
+  await init();
+  const q = fs.query(fs.collection(db, "fotos", fotoId, "comentarios"), fs.orderBy("fecha", "asc"));
+  return fs.onSnapshot(q, (snap) => cb(snap.docs.map((d) => ({ id: d.id, ...d.data() }))));
+}
+
+export async function comentarFoto(fotoId, nombre, texto) {
+  if (modoDemo) {
+    (demoFotos.comentarios[fotoId] ||= []).push({ id: crypto.randomUUID(), nombre, texto, fecha: new Date().toISOString() });
+    const foto = demoFotos.lista.find((f) => f.id === fotoId);
+    if (foto) foto.comentarios = (foto.comentarios || 0) + 1;
+    demo.avisar("fotos");
+    return;
+  }
+  await init();
+  const lote = fs.writeBatch(db);
+  lote.set(fs.doc(fs.collection(db, "fotos", fotoId, "comentarios")), { nombre, texto, fecha: fs.serverTimestamp() });
+  lote.update(fs.doc(db, "fotos", fotoId), { comentarios: fs.increment(1) });
+  await lote.commit();
+}
+
+export async function leerComentariosFotos() {
+  if (modoDemo) {
+    return Object.entries(demoFotos.comentarios).flatMap(([fotoId, lista]) => lista.map((c) => ({ ...c, fotoId })));
+  }
+  const snap = await fs.getDocs(fs.collectionGroup(db, "comentarios"));
+  return snap.docs.map((d) => {
+    const x = d.data();
+    return { id: d.id, fotoId: d.ref.parent.parent.id, ...x, fecha: x.fecha?.toDate?.().toISOString() ?? "" };
+  });
+}
+
+export async function borrarComentarioFoto(fotoId, id) {
+  if (modoDemo) {
+    demoFotos.comentarios[fotoId] = (demoFotos.comentarios[fotoId] || []).filter((c) => c.id !== id);
+    return;
+  }
+  const lote = fs.writeBatch(db);
+  lote.delete(fs.doc(db, "fotos", fotoId, "comentarios", id));
+  lote.update(fs.doc(db, "fotos", fotoId), { comentarios: fs.increment(-1) });
   await lote.commit();
 }
 

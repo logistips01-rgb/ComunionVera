@@ -34,11 +34,12 @@ $("#btn-salir").addEventListener("click", async () => {
 $("#btn-recargar").addEventListener("click", cargar);
 
 async function cargar() {
-  const [conf, reservas, mensajes, fotos] = await Promise.all([
+  const [conf, reservas, mensajes, fotos, comentarios] = await Promise.all([
     datos.leerConfirmaciones(),
     datos.leerReservasDetalle(),
     datos.leerMensajes(),
     datos.leerTodasLasFotos(),
+    datos.leerComentariosFotos(),
   ]);
   listaFotos = fotos;
   confirmaciones = conf.sort((a, b) => (a.fecha < b.fecha ? 1 : -1));
@@ -109,6 +110,23 @@ async function cargar() {
     contenedor.append(fig);
   }
 
+  // Comentarios de las fotos
+  const miniDe = (id) => fotos.find((f) => f.id === id)?.mini ?? "";
+  $("#tabla-comentarios").innerHTML =
+    "<tr><th>Foto</th><th>Nombre</th><th>Comentario</th><th>Fecha</th><th></th></tr>" +
+    comentarios
+      .sort((a, b) => (a.fecha < b.fecha ? 1 : -1))
+      .map(
+        (c) => `<tr>
+          <td><img src="${esc(miniDe(c.fotoId))}" alt="" style="width:56px;height:56px;object-fit:cover;border-radius:6px"></td>
+          <td>${esc(c.nombre)}</td>
+          <td>${esc(c.texto)}</td>
+          <td>${fecha(c.fecha)}</td>
+          <td><button class="boton boton-suave boton-peque" data-borrar-comentario="${esc(c.id)}" data-foto="${esc(c.fotoId)}">Borrar</button></td>
+        </tr>`
+      )
+      .join("");
+
   // Mensajes
   $("#tabla-mensajes").innerHTML =
     "<tr><th>Nombre</th><th>Mensaje</th><th>Fecha</th><th></th></tr>" +
@@ -125,7 +143,11 @@ async function cargar() {
 }
 
 document.addEventListener("click", async (e) => {
-  const { liberar, borrar, borrarFoto } = e.target.dataset ?? {};
+  const { liberar, borrar, borrarFoto, borrarComentario, foto } = e.target.dataset ?? {};
+  if (borrarComentario && confirm("¿Borrar este comentario?")) {
+    await datos.borrarComentarioFoto(foto, borrarComentario);
+    cargar();
+  }
   if (borrarFoto && confirm("¿Borrar esta foto?")) {
     await datos.borrarFoto(borrarFoto);
     cargar();

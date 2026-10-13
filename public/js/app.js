@@ -250,7 +250,7 @@ $("#form-mensaje").addEventListener("submit", async (e) => {
 // ---------- Fotos de los invitados ----------
 if (albumGoogleFotos) {
   $("#btn-album").href = albumGoogleFotos;
-  $("#btn-album").hidden = false;
+  $("#bloque-album").hidden = false;
 }
 
 // Reduce la foto en el navegador antes de subirla (para que quepa en el plan gratuito).
@@ -327,6 +327,12 @@ async function cargarFotos() {
       img.alt = f.nombre ? `Foto de ${f.nombre}` : "Foto de la comunión";
       img.loading = "lazy";
       boton.append(img);
+      if (f.comentarios > 0) {
+        const n = document.createElement("span");
+        n.className = "contador";
+        n.textContent = f.comentarios === 1 ? "1 comentario" : `${f.comentarios} comentarios`;
+        boton.append(n);
+      }
       galeria.append(boton);
     }
     $("#btn-mas-fotos").hidden = lista.length < limiteFotos;
@@ -340,19 +346,115 @@ $("#btn-mas-fotos").addEventListener("click", () => {
 });
 
 const visor = $("#visor");
-$("#galeria").addEventListener("click", async (e) => {
-  const id = e.target.closest("[data-foto]")?.dataset.foto;
-  if (!id) return;
+let fotoActual = null;
+let dejarDeEscucharComentarios = null;
+
+async function abrirFoto(id) {
   const foto = fotosVisibles.find((f) => f.id === id);
+  if (!foto) return;
+  fotoActual = id;
+  const indice = fotosVisibles.indexOf(foto);
+  $("#visor-anterior").hidden = indice <= 0;
+  $("#visor-siguiente").hidden = indice >= fotosVisibles.length - 1;
   $("#visor-img").src = foto.mini; // se ve al momento y luego se cambia por la grande
+  $("#visor-img").alt = foto.nombre ? `Foto de ${foto.nombre}` : "Foto de la comunión";
   $("#visor-pie").textContent = foto.nombre ? `Foto de ${foto.nombre}` : "";
-  visor.showModal();
+  $("#estado-comentario").textContent = "";
+  const campoNombre = $('#form-comentario [name="nombre"]');
+  if (!campoNombre.value) campoNombre.value = nombreRecordado || $("#fotos-nombre").value.trim();
+  if (!visor.open) visor.showModal();
+
+  dejarDeEscucharComentarios?.();
+  dejarDeEscucharComentarios = await datos.escucharComentariosFoto(id, pintarComentarios);
   try {
     const grande = await datos.leerFotoGrande(id);
-    if (grande && visor.open) $("#visor-img").src = grande;
+    if (grande && fotoActual === id) $("#visor-img").src = grande;
   } catch (err) {
     console.error(err);
   }
+}
+
+function pintarComentarios(lista) {
+  const caja = $("#comentarios");
+  caja.innerHTML = "";
+  if (!lista.length) {
+    caja.innerHTML = '<p class="suave">Todavía no hay comentarios.</p>';
+    return;
+  }
+  for (const c of lista) {
+    const p = document.createElement("p");
+    p.className = "comentario";
+    const autor = document.createElement("strong");
+    autor.textContent = c.nombre;
+    p.append(autor, document.createTextNode(` ${c.texto}`));
+    caja.append(p);
+  }
+  caja.scrollTop = caja.scrollHeight;
+}
+
+function moverFoto(paso) {
+  const i = fotosVisibles.findIndex((f) => f.id === fotoActual);
+  const siguiente = fotosVisibles[i + paso];
+  if (siguiente) abrirFoto(siguiente.id);
+}
+
+$("#galeria").addEventListener("click", (e) => {
+  const id = e.target.closest("[data-foto]")?.dataset.foto;
+  if (id) abrirFoto(id);
 });
+$("#visor-anterior").addEventListener("click", () => moverFoto(-1));
+$("#visor-siguiente").addEventListener("click", () => moverFoto(1));
 $("#visor-cerrar").addEventListener("click", () => visor.close());
 visor.addEventListener("click", (e) => e.target === visor && visor.close());
+visor.addEventListener("close", () => {
+  dejarDeEscucharComentarios?.();
+  dejarDeEscucharComentarios = null;
+  fotoActual = null;
+});
+visor.addEventListener("keydown", (e) => {
+  if (e.target.closest("input, textarea")) return;
+  if (e.key === "ArrowLeft") moverFoto(-1);
+  if (e.key === "ArrowRight") moverFoto(1);
+});
+
+// Deslizar el dedo para pasar de foto en el móvil
+let inicioX = null;
+$(".visor-foto").addEventListener("touchstart", (e) => (inicioX = e.touches[0].clientX), { passive: true });
+$(".visor-foto").addEventListener("touchend", (e) => {
+  if (inicioX === null) return;
+  const dx = e.changedTouches[0].clientX - inicioX;
+  if (Math.abs(dx) > 50) moverFoto(dx > 0 ? -1 : 1);
+  inicioX = null;
+});
+
+$("#form-comentario").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const f = e.target;
+  const nombre = f.nombre.value.trim();
+  const texto = f.texto.value.trim();
+  const estado = $("#estado-comentario");
+  if (!nombre || !texto || !fotoActual) return mostrar(estado, "Escribe tu nombre y el comentario.", true);
+  const boton = f.querySelector("button");
+  boton.disabled = true;
+  try {
+    await datos.comentarFoto(fotoActual, nombre, texto);
+    f.texto.value = "";
+    mostrar(estado, "");
+  } catch (err) {
+    console.error(err);
+    mostrar(estado, "No se ha podido enviar el comentario.", true);
+  } finally {
+    boton.disabled = false;
+  }
+});
+
+// Recordar el nombre para no tener que escribirlo cada vez
+let nombreRecordado = "";
+for (const campo of ["#fotos-nombre", '#form-comentario [name="nombre"]', '#form-mensaje [name="nombre"]']) {
+  const el = $(campo);
+  try { el.value ||= localStorage.getItem("vera_nombre") || ""; } catch { /* sin almacenamiento */ }
+  el.addEventListener("input", () => {
+    nombreRecordado = el.value.trim();
+    try { localStorage.setItem("vera_nombre", nombreRecordado); } catch { /* sin almacenamiento */ }
+  });
+}

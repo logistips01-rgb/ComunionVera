@@ -65,7 +65,27 @@ service cloud.firestore {
                     && request.resource.data.alto is int
                     && request.resource.data.fecha == request.time
                     && existsAfter(/databases/$(database)/documents/fotosGrandes/$(id));
-      allow update, delete: if esAdmin();
+      // Cualquiera puede sumar 1 al contador de comentarios; el resto, solo admin.
+      allow update: if esAdmin()
+                    || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['comentarios'])
+                        && request.resource.data.comentarios == resource.data.get('comentarios', 0) + 1);
+      allow delete: if esAdmin();
+
+      match /comentarios/{comentario} {
+        allow read: if true;
+        allow create: if request.resource.data.keys().hasOnly(['nombre', 'texto', 'fecha'])
+                      && texto(request.resource.data.nombre, 60)
+                      && request.resource.data.nombre.size() > 0
+                      && texto(request.resource.data.texto, 300)
+                      && request.resource.data.texto.size() > 0
+                      && request.resource.data.fecha == request.time;
+        allow update, delete: if esAdmin();
+      }
+    }
+
+    // Para que el panel pueda listar todos los comentarios de todas las fotos
+    match /{ruta=**}/comentarios/{comentario} {
+      allow read: if true;
     }
 
     match /fotosGrandes/{id} {
