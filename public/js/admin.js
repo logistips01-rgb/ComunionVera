@@ -8,6 +8,7 @@ const nombreMenu = (id) => menus.find((m) => m.id === id)?.nombre ?? id;
 const fecha = (iso) => (iso ? new Date(iso).toLocaleString("es-ES", { dateStyle: "short", timeStyle: "short" }) : "");
 
 let confirmaciones = [];
+let listaFotos = [];
 
 $("#btn-entrar").addEventListener("click", async () => {
   try {
@@ -33,11 +34,13 @@ $("#btn-salir").addEventListener("click", async () => {
 $("#btn-recargar").addEventListener("click", cargar);
 
 async function cargar() {
-  const [conf, reservas, mensajes] = await Promise.all([
+  const [conf, reservas, mensajes, fotos] = await Promise.all([
     datos.leerConfirmaciones(),
     datos.leerReservasDetalle(),
     datos.leerMensajes(),
+    datos.leerTodasLasFotos(),
   ]);
+  listaFotos = fotos;
   confirmaciones = conf.sort((a, b) => (a.fecha < b.fecha ? 1 : -1));
 
   // Resumen
@@ -50,6 +53,7 @@ async function cargar() {
     ["No pueden venir", confirmaciones.length - si.length],
     ...porMenu.map((m) => [`${m.icono} ${m.nombre}`, m.total]),
     ["Regalos reservados", `${reservas.length}/${regalos.length}`],
+    ["Fotos subidas", fotos.length],
   ]
     .map(([t, n]) => `<div class="tarjeta"><strong>${n}</strong>${esc(t)}</div>`)
     .join("");
@@ -85,6 +89,26 @@ async function cargar() {
       )
       .join("");
 
+  // Fotos
+  const contenedor = $("#fotos-admin");
+  contenedor.innerHTML = fotos.length ? "" : '<p class="suave">Todavía no hay fotos.</p>';
+  for (const f of fotos) {
+    const fig = document.createElement("figure");
+    const img = document.createElement("img");
+    img.src = f.mini;
+    img.loading = "lazy";
+    const pie = document.createElement("figcaption");
+    const autor = document.createElement("span");
+    autor.textContent = f.nombre || "Anónimo";
+    const borrar = document.createElement("button");
+    borrar.className = "boton boton-suave boton-peque";
+    borrar.dataset.borrarFoto = f.id;
+    borrar.textContent = "Borrar";
+    pie.append(autor, borrar);
+    fig.append(img, pie);
+    contenedor.append(fig);
+  }
+
   // Mensajes
   $("#tabla-mensajes").innerHTML =
     "<tr><th>Nombre</th><th>Mensaje</th><th>Fecha</th><th></th></tr>" +
@@ -101,7 +125,11 @@ async function cargar() {
 }
 
 document.addEventListener("click", async (e) => {
-  const { liberar, borrar } = e.target.dataset ?? {};
+  const { liberar, borrar, borrarFoto } = e.target.dataset ?? {};
+  if (borrarFoto && confirm("¿Borrar esta foto?")) {
+    await datos.borrarFoto(borrarFoto);
+    cargar();
+  }
   if (liberar && confirm("¿Liberar este regalo para que otro invitado pueda reservarlo?")) {
     await datos.liberarRegalo(liberar);
     cargar();
@@ -127,4 +155,25 @@ $("#btn-csv").addEventListener("click", () => {
   a.href = URL.createObjectURL(blob);
   a.download = "confirmaciones-comunion-vera.csv";
   a.click();
+});
+
+// Descargar todas las fotos en un ZIP
+$("#btn-zip").addEventListener("click", async () => {
+  const estado = $("#estado-zip");
+  if (!listaFotos.length) return (estado.textContent = "No hay fotos todavía.");
+  const zip = new JSZip();
+  for (const [i, f] of listaFotos.entries()) {
+    estado.textContent = `Preparando foto ${i + 1} de ${listaFotos.length}…`;
+    const imagen = await datos.leerFotoGrande(f.id);
+    if (!imagen) continue;
+    const autor = (f.nombre || "invitado").replace(/[^\p{L}\p{N} _-]/gu, "").trim() || "invitado";
+    zip.file(`${String(i + 1).padStart(3, "0")}-${autor}.jpg`, imagen.split(",")[1], { base64: true });
+  }
+  estado.textContent = "Creando el ZIP…";
+  const blob = await zip.generateAsync({ type: "blob" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "fotos-comunion-vera.zip";
+  a.click();
+  estado.textContent = "¡Descargado!";
 });

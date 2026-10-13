@@ -25,6 +25,7 @@
     <a href="#menu">Menú</a>
     <a href="#confirmar">Confirmar</a>
     <a href="#regalos">Regalos</a>
+    <a href="#fotos">Fotos</a>
     <a href="#mensajes">Mensajes</a>
   </nav>
 
@@ -144,6 +145,21 @@
       <p class="aportacion" id="aportacion" hidden></p>
     </section>
 
+    <!-- FOTOS -->
+    <section id="fotos" class="seccion">
+      <h2>Fotos del día</h2>
+      <p class="intro">¿Has hecho fotos? ¡Súbelas aquí para que Vera las tenga todas de recuerdo! 📸</p>
+      <div class="subir-fotos">
+        <input id="fotos-nombre" type="text" maxlength="60" placeholder="Tu nombre (opcional)" />
+        <label class="boton boton-grande" for="fotos-input">📷 Elegir fotos para subir</label>
+        <input id="fotos-input" type="file" accept="image/*" multiple hidden />
+        <p class="estado" id="estado-fotos" role="status"></p>
+        <a class="enlace-album" id="btn-album" target="_blank" rel="noopener" hidden>¿Las quieres enviar en calidad original? Súbelas a nuestro álbum de Google Fotos →</a>
+      </div>
+      <div class="galeria" id="galeria"></div>
+      <div class="acciones"><button class="boton boton-suave" id="btn-mas-fotos" type="button" hidden>Ver más fotos</button></div>
+    </section>
+
     <!-- MENSAJES -->
     <section id="mensajes" class="seccion">
       <h2>Libro de mensajes</h2>
@@ -174,6 +190,13 @@
         <button class="boton" value="ok">Reservar</button>
       </div>
     </form>
+  </dialog>
+
+  <!-- Visor de fotos -->
+  <dialog id="visor" class="visor">
+    <button class="visor-cerrar" id="visor-cerrar" type="button" aria-label="Cerrar">✕</button>
+    <img id="visor-img" alt="" />
+    <p class="visor-pie" id="visor-pie"></p>
   </dialog>
 
   <script type="module" src="js/app.js"></script>

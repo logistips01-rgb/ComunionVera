@@ -95,6 +95,69 @@ export async function enviarMensaje(nombre, texto) {
   await fs.addDoc(fs.collection(db, "mensajes"), { nombre, texto, fecha: fs.serverTimestamp() });
 }
 
+// ---------- Fotos de los invitados ----------
+// Cada foto se guarda en dos documentos: "fotos" (miniatura, para la galería)
+// y "fotosGrandes" (la imagen a buen tamaño, solo se descarga al abrirla).
+const demoFotos = { lista: [], grandes: {} }; // en modo demo solo viven en memoria
+
+// Llama a cb(lista) con las últimas `limite` fotos. Devuelve una función para dejar de escuchar.
+export async function escucharFotos(limite, cb) {
+  if (modoDemo) {
+    const avisar = () => cb(demoFotos.lista.slice().reverse().slice(0, limite));
+    (demo.oyentes.fotos ||= []).push(avisar);
+    avisar();
+    return () => (demo.oyentes.fotos = demo.oyentes.fotos.filter((f) => f !== avisar));
+  }
+  await init();
+  const q = fs.query(fs.collection(db, "fotos"), fs.orderBy("fecha", "desc"), fs.limit(limite));
+  return fs.onSnapshot(q, (snap) => cb(snap.docs.map((d) => ({ id: d.id, ...d.data() }))));
+}
+
+export async function subirFoto({ nombre, mini, imagen, ancho, alto }) {
+  if (modoDemo) {
+    const id = crypto.randomUUID();
+    demoFotos.lista.push({ id, nombre, mini, ancho, alto, fecha: new Date().toISOString() });
+    demoFotos.grandes[id] = imagen;
+    demo.avisar("fotos");
+    return;
+  }
+  await init();
+  const ref = fs.doc(fs.collection(db, "fotos"));
+  const lote = fs.writeBatch(db);
+  lote.set(ref, { nombre, mini, ancho, alto, fecha: fs.serverTimestamp() });
+  lote.set(fs.doc(db, "fotosGrandes", ref.id), { imagen, fecha: fs.serverTimestamp() });
+  await lote.commit();
+}
+
+export async function leerFotoGrande(id) {
+  if (modoDemo) return demoFotos.grandes[id];
+  await init();
+  const snap = await fs.getDoc(fs.doc(db, "fotosGrandes", id));
+  return snap.data()?.imagen;
+}
+
+export async function leerTodasLasFotos() {
+  if (modoDemo) return demoFotos.lista.slice().reverse();
+  const snap = await fs.getDocs(fs.query(fs.collection(db, "fotos"), fs.orderBy("fecha", "desc")));
+  return snap.docs.map((d) => {
+    const x = d.data();
+    return { id: d.id, ...x, fecha: x.fecha?.toDate?.().toISOString() ?? "" };
+  });
+}
+
+export async function borrarFoto(id) {
+  if (modoDemo) {
+    demoFotos.lista = demoFotos.lista.filter((f) => f.id !== id);
+    delete demoFotos.grandes[id];
+    demo.avisar("fotos");
+    return;
+  }
+  const lote = fs.writeBatch(db);
+  lote.delete(fs.doc(db, "fotos", id));
+  lote.delete(fs.doc(db, "fotosGrandes", id));
+  await lote.commit();
+}
+
 // ---------- Panel de organización ----------
 export async function iniciarSesion() {
   if (modoDemo) return { email: "demo" };

@@ -54,6 +54,30 @@ service cloud.firestore {
       allow read, update, delete: if esAdmin();
     }
 
+    // Fotos de los invitados (públicas). Miniatura en "fotos", imagen grande en "fotosGrandes".
+    match /fotos/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['nombre', 'mini', 'ancho', 'alto', 'fecha'])
+                    && texto(request.resource.data.nombre, 60)
+                    && request.resource.data.mini is string
+                    && request.resource.data.mini.size() < 150000
+                    && request.resource.data.ancho is int
+                    && request.resource.data.alto is int
+                    && request.resource.data.fecha == request.time
+                    && existsAfter(/databases/$(database)/documents/fotosGrandes/$(id));
+      allow update, delete: if esAdmin();
+    }
+
+    match /fotosGrandes/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['imagen', 'fecha'])
+                    && request.resource.data.imagen is string
+                    && request.resource.data.imagen.size() < 1000000
+                    && request.resource.data.fecha == request.time
+                    && existsAfter(/databases/$(database)/documents/fotos/$(id));
+      allow update, delete: if esAdmin();
+    }
+
     // Libro de mensajes (público)
     match /mensajes/{id} {
       allow read: if true;

@@ -1,4 +1,4 @@
-import { evento, menus, regalos, aportacion } from "./config.js";
+import { evento, menus, regalos, aportacion, albumGoogleFotos } from "./config.js";
 import * as datos from "./db.js";
 
 const $ = (sel) => document.querySelector(sel);
@@ -247,3 +247,113 @@ $("#form-mensaje").addEventListener("submit", async (e) => {
     mostrar(estado, "No se ha podido enviar el mensaje.", true);
   }
 });
+
+// ---------- Fotos de los invitados ----------
+if (albumGoogleFotos) {
+  $("#btn-album").href = albumGoogleFotos;
+  $("#btn-album").hidden = false;
+}
+
+// Reduce la foto en el navegador antes de subirla (para que quepa en el plan gratuito).
+async function reducir(archivo, maxLado, calidad) {
+  const url = URL.createObjectURL(archivo);
+  try {
+    const img = new Image();
+    img.src = url;
+    await img.decode();
+    const escala = Math.min(1, maxLado / Math.max(img.naturalWidth, img.naturalHeight));
+    const lienzo = document.createElement("canvas");
+    lienzo.width = Math.round(img.naturalWidth * escala);
+    lienzo.height = Math.round(img.naturalHeight * escala);
+    lienzo.getContext("2d").drawImage(img, 0, 0, lienzo.width, lienzo.height);
+    return { lienzo, ancho: lienzo.width, alto: lienzo.height, calidad };
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+async function prepararFoto(archivo) {
+  const grande = await reducir(archivo, 1600, 0.82);
+  let imagen = grande.lienzo.toDataURL("image/jpeg", 0.82);
+  // Si aún pesa demasiado, bajamos la calidad poco a poco
+  for (let q = 0.7; imagen.length > 950000 && q > 0.3; q -= 0.1) {
+    imagen = grande.lienzo.toDataURL("image/jpeg", q);
+  }
+  if (imagen.length > 950000) throw new Error("demasiado-grande");
+  const mini = (await reducir(archivo, 400, 0.7)).lienzo.toDataURL("image/jpeg", 0.7);
+  return { imagen, mini, ancho: grande.ancho, alto: grande.alto };
+}
+
+$("#fotos-input").addEventListener("change", async (e) => {
+  const archivos = [...e.target.files].slice(0, 20);
+  e.target.value = "";
+  if (!archivos.length) return;
+  const estado = $("#estado-fotos");
+  const nombre = $("#fotos-nombre").value.trim();
+  let subidas = 0;
+  let fallos = 0;
+  for (const [i, archivo] of archivos.entries()) {
+    mostrar(estado, `Subiendo ${i + 1} de ${archivos.length}…`);
+    try {
+      await datos.subirFoto({ nombre, ...(await prepararFoto(archivo)) });
+      subidas++;
+    } catch (err) {
+      console.error(err);
+      fallos++;
+    }
+  }
+  if (fallos === 0) mostrar(estado, subidas === 1 ? "¡Foto subida! Gracias 💛" : `¡${subidas} fotos subidas! Gracias 💛`);
+  else mostrar(estado, `Subidas ${subidas}, no se han podido subir ${fallos}. Prueba con otras o en otro navegador.`, true);
+});
+
+let limiteFotos = 24;
+let dejarDeEscuchar = null;
+let fotosVisibles = [];
+
+async function cargarFotos() {
+  dejarDeEscuchar?.();
+  dejarDeEscuchar = await datos.escucharFotos(limiteFotos, (lista) => {
+    fotosVisibles = lista;
+    const galeria = $("#galeria");
+    galeria.innerHTML = "";
+    if (!lista.length) {
+      galeria.innerHTML = '<p class="suave centrado" style="grid-column:1/-1">Aún no hay fotos. ¡Sube la primera! ✨</p>';
+    }
+    for (const f of lista) {
+      const boton = document.createElement("button");
+      boton.type = "button";
+      boton.dataset.foto = f.id;
+      const img = document.createElement("img");
+      img.src = f.mini;
+      img.alt = f.nombre ? `Foto de ${f.nombre}` : "Foto de la comunión";
+      img.loading = "lazy";
+      boton.append(img);
+      galeria.append(boton);
+    }
+    $("#btn-mas-fotos").hidden = lista.length < limiteFotos;
+  });
+}
+cargarFotos();
+
+$("#btn-mas-fotos").addEventListener("click", () => {
+  limiteFotos += 24;
+  cargarFotos();
+});
+
+const visor = $("#visor");
+$("#galeria").addEventListener("click", async (e) => {
+  const id = e.target.closest("[data-foto]")?.dataset.foto;
+  if (!id) return;
+  const foto = fotosVisibles.find((f) => f.id === id);
+  $("#visor-img").src = foto.mini; // se ve al momento y luego se cambia por la grande
+  $("#visor-pie").textContent = foto.nombre ? `📸 ${foto.nombre}` : "";
+  visor.showModal();
+  try {
+    const grande = await datos.leerFotoGrande(id);
+    if (grande && visor.open) $("#visor-img").src = grande;
+  } catch (err) {
+    console.error(err);
+  }
+});
+$("#visor-cerrar").addEventListener("click", () => visor.close());
+visor.addEventListener("click", (e) => e.target === visor && visor.close());

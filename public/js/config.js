@@ -90,3 +90,7 @@ export const aportacion = {
   texto: "Si lo prefieres, también puedes colaborar con su hucha:",
   dato: "",
 };
+
+// 6) Álbum compartido de Google Fotos para subir fotos en calidad original.
+//    Pega aquí el enlace para compartir del álbum (déjalo vacío "" para ocultar el botón).
+export const albumGoogleFotos = "";
