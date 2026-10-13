@@ -8,12 +8,12 @@
 //    Mientras esté "PEGA_AQUI", la web funciona en MODO DEMO
 //    (guarda los datos solo en tu navegador, ideal para probar).
 export const firebaseConfig = {
-  apiKey: "PEGA_AQUI",
-  authDomain: "PEGA_AQUI",
-  projectId: "PEGA_AQUI",
-  storageBucket: "PEGA_AQUI",
-  messagingSenderId: "PEGA_AQUI",
-  appId: "PEGA_AQUI",
+  apiKey: "AIzaSyBPDmaONMNyrFpQhEW9KwWoFOgRV92Azc8",
+  authDomain: "comunion-vera.firebaseapp.com",
+  projectId: "comunion-vera",
+  storageBucket: "comunion-vera.firebasestorage.app",
+  messagingSenderId: "25352002110",
+  appId: "1:25352002110:web:256694dd3a2a62d5e8cf6f",
 };
 
 // 2) Correos que pueden entrar al panel de organización (admin.html).
