@@ -30,10 +30,15 @@ jobs:
           fi
           printf '%s' "$CUENTA_SERVICIO" > "$RUNNER_TEMP/cuenta-servicio.json"
 
-      - name: Publicar web y reglas de seguridad
+      - name: Publicar la web
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/cuenta-servicio.json
-        run: npx --yes firebase-tools@14 deploy --only hosting,firestore:rules --project comunion-vera --non-interactive
+        run: npx --yes firebase-tools@14 deploy --only hosting --project comunion-vera --non-interactive
+
+      - name: Publicar las reglas de seguridad
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/cuenta-servicio.json
+        run: npx --yes firebase-tools@14 deploy --only firestore:rules --project comunion-vera --non-interactive
 
       - name: Borrar credenciales
         if: always()
