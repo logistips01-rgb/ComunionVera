@@ -31,7 +31,7 @@ function actualizarCuenta() {
   $("#cd-horas").textContent = Math.floor((s % 86400) / 3600);
   $("#cd-min").textContent = Math.floor((s % 3600) / 60);
   $("#cd-seg").textContent = s % 60;
-  if (resto === 0) $("#cuenta-atras").innerHTML = '<p class="hoy">¡Hoy es el gran día! 🎉</p>';
+  if (resto === 0) $("#cuenta-atras").innerHTML = '<p class="hoy">¡Hoy es el gran día!</p>';
 }
 actualizarCuenta();
 setInterval(actualizarCuenta, 1000);
@@ -83,15 +83,15 @@ $("#lista-menus").innerHTML = menus
   .map(
     (m) => `
     <article class="tarjeta tarjeta-menu">
-      <div class="icono-grande">${m.icono}</div>
       <h3>${m.nombre}</h3>
+      <div class="adorno" aria-hidden="true"></div>
       <ul>${m.platos.map((p) => `<li>${p}</li>`).join("")}</ul>
     </article>`
   )
   .join("");
 
 // ---------- Formulario de confirmación ----------
-const opcionesMenu = menus.map((m) => `<option value="${m.id}">${m.icono} ${m.nombre}</option>`).join("");
+const opcionesMenu = menus.map((m) => `<option value="${m.id}">${m.nombre}</option>`).join("");
 
 function anadirPersona() {
   const fila = document.createElement("div");
@@ -99,7 +99,7 @@ function anadirPersona() {
   fila.innerHTML = `
     <input type="text" class="p-nombre" placeholder="Nombre" maxlength="60" required />
     <select class="p-menu" aria-label="Menú">${opcionesMenu}</select>
-    <button type="button" class="quitar" aria-label="Quitar persona">✕</button>`;
+    <button type="button" class="quitar" aria-label="Quitar persona"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>`;
   fila.querySelector(".quitar").addEventListener("click", () => {
     if ($$(".persona").length > 1) fila.remove();
   });
@@ -141,7 +141,7 @@ $("#form-rsvp").addEventListener("submit", async (e) => {
       comentarios: f.comentarios.value.trim(),
     });
     f.innerHTML = `<div class="gracias">
-      <div class="icono-grande">${asiste ? "🎉" : "🤍"}</div>
+      <div class="adorno" aria-hidden="true"></div>
       <h3>${asiste ? "¡Muchas gracias! Os esperamos con mucha ilusión." : "¡Gracias por avisar! Os echaremos de menos."}</h3>
     </div>`;
   } catch (err) {
@@ -164,13 +164,12 @@ function pintarRegalos() {
       const ocupado = reservados.has(r.id);
       return `
       <article class="tarjeta regalo ${ocupado ? "reservado" : ""}">
-        <div class="icono-grande">${r.icono || "🎁"}</div>
         <h3>${r.nombre}</h3>
         <p class="suave">${r.detalle || ""}</p>
         ${r.enlace ? `<a href="${r.enlace}" target="_blank" rel="noopener" class="enlace">Ver ejemplo</a>` : ""}
         ${
           ocupado
-            ? `<span class="etiqueta-reservado">✓ Reservado</span>`
+            ? `<span class="etiqueta-reservado">Reservado</span>`
             : `<button class="boton boton-peque" data-regalo="${r.id}" type="button">Lo regalo yo</button>`
         }
       </article>`;
@@ -215,7 +214,7 @@ datos.escucharMensajes((lista) => {
   const muro = $("#muro");
   muro.innerHTML = "";
   if (!lista.length) {
-    muro.innerHTML = '<p class="suave centrado">Sé el primero en escribirle algo bonito ✨</p>';
+    muro.innerHTML = '<p class="suave centrado">Sé el primero en escribirle algo bonito.</p>';
     return;
   }
   for (const m of lista) {
@@ -241,7 +240,7 @@ $("#form-mensaje").addEventListener("submit", async (e) => {
   try {
     await datos.enviarMensaje(nombre, texto);
     f.reset();
-    mostrar(estado, "¡Mensaje enviado! 💛");
+    mostrar(estado, "¡Mensaje enviado, gracias!");
   } catch (err) {
     console.error(err);
     mostrar(estado, "No se ha podido enviar el mensaje.", true);
@@ -302,7 +301,7 @@ $("#fotos-input").addEventListener("change", async (e) => {
       fallos++;
     }
   }
-  if (fallos === 0) mostrar(estado, subidas === 1 ? "¡Foto subida! Gracias 💛" : `¡${subidas} fotos subidas! Gracias 💛`);
+  if (fallos === 0) mostrar(estado, subidas === 1 ? "¡Foto subida, gracias!" : `¡${subidas} fotos subidas, gracias!`);
   else mostrar(estado, `Subidas ${subidas}, no se han podido subir ${fallos}. Prueba con otras o en otro navegador.`, true);
 });
 
@@ -317,7 +316,7 @@ async function cargarFotos() {
     const galeria = $("#galeria");
     galeria.innerHTML = "";
     if (!lista.length) {
-      galeria.innerHTML = '<p class="suave centrado" style="grid-column:1/-1">Aún no hay fotos. ¡Sube la primera! ✨</p>';
+      galeria.innerHTML = '<p class="suave centrado" style="grid-column:1/-1">Aún no hay fotos. ¡Sube la primera!</p>';
     }
     for (const f of lista) {
       const boton = document.createElement("button");
@@ -346,7 +345,7 @@ $("#galeria").addEventListener("click", async (e) => {
   if (!id) return;
   const foto = fotosVisibles.find((f) => f.id === id);
   $("#visor-img").src = foto.mini; // se ve al momento y luego se cambia por la grande
-  $("#visor-pie").textContent = foto.nombre ? `📸 ${foto.nombre}` : "";
+  $("#visor-pie").textContent = foto.nombre ? `Foto de ${foto.nombre}` : "";
   visor.showModal();
   try {
     const grande = await datos.leerFotoGrande(id);

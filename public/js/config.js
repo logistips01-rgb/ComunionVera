@@ -51,25 +51,21 @@ export const menus = [
   {
     id: "carne",
     nombre: "Menú Carne",
-    icono: "🥩",
     platos: ["Entrantes para compartir", "Solomillo ibérico con patatas", "Tarta de comunión"],
   },
   {
     id: "pescado",
     nombre: "Menú Pescado",
-    icono: "🐟",
     platos: ["Entrantes para compartir", "Lubina a la espalda con verduras", "Tarta de comunión"],
   },
   {
     id: "vegetariano",
     nombre: "Menú Vegetariano",
-    icono: "🥗",
     platos: ["Entrantes vegetales", "Risotto de setas", "Tarta de comunión"],
   },
   {
     id: "infantil",
     nombre: "Menú Infantil",
-    icono: "🧁",
     platos: ["Croquetas y fingers de pollo", "Pizza o hamburguesa", "Helado y tarta"],
   },
 ];
@@ -77,12 +73,12 @@ export const menus = [
 // 5) Lista de regalos. Los invitados pueden "reservar" uno para que no se repita.
 //    El "id" debe ser único y sin espacios.
 export const regalos = [
-  { id: "bicicleta", nombre: "Bicicleta", detalle: "Talla 24”, de color lila", icono: "🚲", enlace: "" },
-  { id: "lego", nombre: "Set de LEGO Friends", detalle: "Casa en el árbol", icono: "🧱", enlace: "" },
-  { id: "libros", nombre: "Colección de libros", detalle: "Saga favorita de Vera", icono: "📚", enlace: "" },
-  { id: "reloj", nombre: "Reloj", detalle: "Primer reloj con su nombre grabado", icono: "⌚", enlace: "" },
-  { id: "patines", nombre: "Patines", detalle: "Talla 34", icono: "🛼", enlace: "" },
-  { id: "camara", nombre: "Cámara instantánea", detalle: "Tipo Instax, con carretes", icono: "📷", enlace: "" },
+  { id: "bicicleta", nombre: "Bicicleta", detalle: "Talla 24”, de color lila", enlace: "" },
+  { id: "lego", nombre: "Set de LEGO Friends", detalle: "Casa en el árbol", enlace: "" },
+  { id: "libros", nombre: "Colección de libros", detalle: "Saga favorita de Vera", enlace: "" },
+  { id: "reloj", nombre: "Reloj", detalle: "Primer reloj con su nombre grabado", enlace: "" },
+  { id: "patines", nombre: "Patines", detalle: "Talla 34", enlace: "" },
+  { id: "camara", nombre: "Cámara instantánea", detalle: "Tipo Instax, con carretes", enlace: "" },
 ];
 
 // Si preferís aportación económica, pon aquí el IBAN o Bizum (déjalo vacío "" para ocultarlo).

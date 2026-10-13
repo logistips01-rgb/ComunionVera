@@ -118,7 +118,22 @@ a { color: var(--oro); }
   border: 1px solid rgba(184, 150, 79, 0.15);
 }
 .tarjeta p { margin: 0.2rem 0; }
-.icono-grande { font-size: 2.4rem; line-height: 1; margin-bottom: 0.5rem; }
+.icono-linea {
+  width: 44px; height: 44px; margin: 0 auto 0.5rem; display: block;
+  fill: none; stroke: var(--oro); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+}
+/* Adorno: línea dorada fina con un rombo en el centro */
+.adorno {
+  width: 120px; height: 12px; margin: 0.5rem auto 0.75rem; position: relative;
+  background: linear-gradient(var(--oro-claro), var(--oro-claro)) center / 100% 1px no-repeat;
+}
+.adorno::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 7px; height: 7px; background: var(--fondo);
+  border: 1px solid var(--oro); transform: translate(-50%, -50%) rotate(45deg);
+}
+.tarjeta .adorno::after { background: var(--tarjeta); }
+.quitar, .visor-cerrar { display: inline-grid; place-items: center; }
 .hora { font-family: var(--serif); font-size: 1.4rem; color: var(--oro); }
 .tarjetas-dos { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
 .tarjeta .boton { margin-top: 1rem; }
@@ -199,11 +214,10 @@ fieldset { border: none; padding: 0; margin: 0; }
 
 /* Regalos */
 .regalos { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; }
-.regalo { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
+.regalo { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding-top: 1.5rem; }
 .regalo .boton { margin-top: auto; }
 .regalo h3 { font-size: 1.3rem; }
 .regalo.reservado { opacity: 0.6; }
-.regalo.reservado .icono-grande { filter: grayscale(1); }
 .etiqueta-reservado {
   margin-top: auto; display: inline-block;
   background: var(--salvia); color: #fff;

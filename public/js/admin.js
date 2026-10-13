@@ -51,7 +51,7 @@ async function cargar() {
     ["Familias que vienen", si.length],
     ["Personas en total", personas.length],
     ["No pueden venir", confirmaciones.length - si.length],
-    ...porMenu.map((m) => [`${m.icono} ${m.nombre}`, m.total]),
+    ...porMenu.map((m) => [m.nombre, m.total]),
     ["Regalos reservados", `${reservas.length}/${regalos.length}`],
     ["Fotos subidas", fotos.length],
   ]
@@ -65,7 +65,7 @@ async function cargar() {
       .map(
         (c) => `<tr>
           <td>${esc(c.familia)}</td>
-          <td>${c.asiste ? "✅ Sí" : "❌ No"}</td>
+          <td>${c.asiste ? "Sí" : "No"}</td>
           <td>${(c.personas || []).map((p) => `${esc(p.nombre)} — ${esc(nombreMenu(p.menu))}`).join("<br>")}</td>
           <td>${esc(c.alergias)}</td>
           <td>${esc(c.telefono)}</td>

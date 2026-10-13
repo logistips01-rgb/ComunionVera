@@ -55,7 +55,7 @@
       <p class="intro" data-evento="mensaje"></p>
       <div class="tarjetas-dos">
         <article class="tarjeta">
-          <div class="icono-grande">⛪</div>
+          <svg class="icono-linea" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6v36M14 17h20"/></svg>
           <h3>Ceremonia</h3>
           <p class="hora" data-lugar="ceremonia.hora"></p>
           <p><strong data-lugar="ceremonia.lugar"></strong></p>
@@ -63,7 +63,7 @@
           <a class="boton boton-suave" data-mapa="ceremonia" target="_blank" rel="noopener">Cómo llegar</a>
         </article>
         <article class="tarjeta">
-          <div class="icono-grande">🥂</div>
+          <svg class="icono-linea" viewBox="0 0 48 48" aria-hidden="true"><path d="M13 8h10l-1 9a4 4 0 0 1-8 0zM18 21v17M13 38h10M27 8h10l-1 9a4 4 0 0 1-8 0zM32 21v17M27 38h10"/></svg>
           <h3>Celebración</h3>
           <p class="hora" data-lugar="celebracion.hora"></p>
           <p><strong data-lugar="celebracion.lugar"></strong></p>
@@ -72,8 +72,8 @@
         </article>
       </div>
       <div class="acciones">
-        <a class="boton" id="btn-calendario" target="_blank" rel="noopener">📅 Añadir al calendario</a>
-        <button class="boton boton-suave" id="btn-compartir" type="button">💌 Enviar invitación</button>
+        <a class="boton" id="btn-calendario" target="_blank" rel="noopener">Añadir al calendario</a>
+        <button class="boton boton-suave" id="btn-compartir" type="button">Enviar invitación</button>
       </div>
 
       <details class="crear-invitacion">
@@ -112,8 +112,8 @@
 
         <fieldset class="asiste">
           <legend>¿Vendréis?</legend>
-          <label class="opcion"><input type="radio" name="asiste" value="si" checked /> ¡Sí, allí estaremos! 🎉</label>
-          <label class="opcion"><input type="radio" name="asiste" value="no" /> No podremos ir 😢</label>
+          <label class="opcion"><input type="radio" name="asiste" value="si" checked /> Sí, allí estaremos</label>
+          <label class="opcion"><input type="radio" name="asiste" value="no" /> No podremos ir</label>
         </fieldset>
 
         <div id="bloque-personas">
@@ -148,13 +148,13 @@
     <!-- FOTOS -->
     <section id="fotos" class="seccion">
       <h2>Fotos del día</h2>
-      <p class="intro">¿Has hecho fotos? ¡Súbelas aquí para que Vera las tenga todas de recuerdo! 📸</p>
+      <p class="intro">¿Has hecho fotos? ¡Súbelas aquí para que Vera las tenga todas de recuerdo.</p>
       <div class="subir-fotos">
         <input id="fotos-nombre" type="text" maxlength="60" placeholder="Tu nombre (opcional)" />
-        <label class="boton boton-grande" for="fotos-input">📷 Elegir fotos para subir</label>
+        <label class="boton boton-grande" for="fotos-input">Elegir fotos para subir</label>
         <input id="fotos-input" type="file" accept="image/*" multiple hidden />
         <p class="estado" id="estado-fotos" role="status"></p>
-        <a class="enlace-album" id="btn-album" target="_blank" rel="noopener" hidden>¿Las quieres enviar en calidad original? Súbelas a nuestro álbum de Google Fotos →</a>
+        <a class="enlace-album" id="btn-album" target="_blank" rel="noopener" hidden>¿Las quieres enviar en calidad original? Súbelas a nuestro álbum de Google Fotos</a>
       </div>
       <div class="galeria" id="galeria"></div>
       <div class="acciones"><button class="boton boton-suave" id="btn-mas-fotos" type="button" hidden>Ver más fotos</button></div>
@@ -175,8 +175,8 @@
   </main>
 
   <footer class="pie">
-    <p>Hecho con cariño para Vera 🤍</p>
-    <p><a class="acceso-admin" href="admin">🔒 Acceso organización</a></p>
+    <p>Hecho con cariño para Vera</p>
+    <p><a class="acceso-admin" href="admin">Acceso organización</a></p>
   </footer>
 
   <!-- Ventana para reservar regalo -->
@@ -194,7 +194,7 @@
 
   <!-- Visor de fotos -->
   <dialog id="visor" class="visor">
-    <button class="visor-cerrar" id="visor-cerrar" type="button" aria-label="Cerrar">✕</button>
+    <button class="visor-cerrar" id="visor-cerrar" type="button" aria-label="Cerrar"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     <img id="visor-img" alt="" />
     <p class="visor-pie" id="visor-pie"></p>
   </dialog>
