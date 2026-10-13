@@ -324,3 +324,18 @@ th { background: var(--fondo-alt); font-weight: 700; }
 .fotos-admin figure { margin: 0; background: var(--tarjeta); border-radius: 12px; overflow: hidden; box-shadow: var(--sombra); }
 .fotos-admin img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
 .fotos-admin figcaption { padding: 0.4rem 0.5rem; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; gap: 0.25rem; }
+
+/* Móvil: menú en una sola línea deslizable */
+@media (max-width: 600px) {
+  .menu-nav { justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 0.4rem 0.5rem; }
+  .menu-nav::-webkit-scrollbar { display: none; }
+  .menu-nav a { flex: none; }
+}
+
+/* Botón fijo para subir fotos durante el día de la comunión */
+.boton-flotante {
+  position: fixed; left: 50%; bottom: calc(1rem + env(safe-area-inset-bottom)); transform: translateX(-50%);
+  z-index: 20; box-shadow: 0 8px 24px rgba(80, 60, 20, 0.3); white-space: nowrap;
+  width: auto; padding: 0.9rem 2.4rem; text-align: center;
+}
+.boton-flotante:hover { transform: translateX(-50%) translateY(-1px); }

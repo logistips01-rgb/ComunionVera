@@ -253,6 +253,14 @@ if (albumGoogleFotos) {
   $("#bloque-album").hidden = false;
 }
 
+// El día de la comunión (y los dos siguientes) se muestra un botón fijo para subir fotos,
+// que se oculta mientras la propia sección de fotos está en pantalla.
+const diaDeLaComunion = Date.now() > objetivo - 4 * 3600 * 1000 && Date.now() < objetivo + 3 * 86400 * 1000;
+if (diaDeLaComunion || new URLSearchParams(location.search).has("dia")) {
+  const flotante = $("#btn-flotante-fotos");
+  new IntersectionObserver(([e]) => (flotante.hidden = e.isIntersecting)).observe($("#fotos"));
+}
+
 // Reduce la foto en el navegador antes de subirla (para que quepa en el plan gratuito).
 async function reducir(archivo, maxLado, calidad) {
   const url = URL.createObjectURL(archivo);
