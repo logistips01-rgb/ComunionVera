@@ -24,7 +24,7 @@ export const admins = ["veracomunion@gmail.com"];
 export const evento = {
   nombre: "Vera",
   titulo: "Mi Primera Comunión",
-  foto: "img/vera.svg", // sustituye por img/vera.jpg cuando tengas la foto
+  foto: "img/vera.jpg",
   // Fecha y hora de la ceremonia en formato ISO (con zona horaria de España)
   fecha: "2027-05-15T12:00:00+02:00",
   fechaTexto: "Sábado, 15 de mayo de 2027",
