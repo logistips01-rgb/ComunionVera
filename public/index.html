@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Primera Comunión de Vera</title>
+  <meta name="description" content="Invitación a la Primera Comunión de Vera: confirma tu asistencia, elige menú y consulta la lista de regalos." />
+  <meta property="og:title" content="Primera Comunión de Vera" />
+  <meta property="og:description" content="¡Estás invitado! Confirma tu asistencia y elige tu menú." />
+  <meta property="og:image" content="img/vera.svg" />
+  <meta name="theme-color" content="#fbf8f2" />
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div id="aviso-demo" class="aviso-demo" hidden>
+    Modo demo: los datos se guardan solo en este navegador. Conecta Firebase en <code>js/config.js</code>.
+  </div>
+
+  <nav class="menu-nav">
+    <a href="#invitacion">Invitación</a>
+    <a href="#menu">Menú</a>
+    <a href="#confirmar">Confirmar</a>
+    <a href="#regalos">Regalos</a>
+    <a href="#mensajes">Mensajes</a>
+  </nav>
+
+  <!-- PORTADA -->
+  <header class="portada">
+    <p class="saludo" id="saludo-personal" hidden></p>
+    <p class="subtitulo" data-evento="titulo"></p>
+    <h1 class="nombre" data-evento="nombre"></h1>
+    <div class="marco-foto">
+      <img id="foto" alt="Foto de Vera" />
+    </div>
+    <p class="fecha" data-evento="fechaTexto"></p>
+    <p class="frase" data-evento="frase"></p>
+
+    <div class="cuenta-atras" id="cuenta-atras" aria-live="polite">
+      <div><span id="cd-dias">0</span><small>días</small></div>
+      <div><span id="cd-horas">0</span><small>horas</small></div>
+      <div><span id="cd-min">0</span><small>min</small></div>
+      <div><span id="cd-seg">0</span><small>seg</small></div>
+    </div>
+  </header>
+
+  <main>
+    <!-- INVITACIÓN -->
+    <section id="invitacion" class="seccion">
+      <h2>Invitación</h2>
+      <p class="intro" data-evento="mensaje"></p>
+      <div class="tarjetas-dos">
+        <article class="tarjeta">
+          <div class="icono-grande">⛪</div>
+          <h3>Ceremonia</h3>
+          <p class="hora" data-lugar="ceremonia.hora"></p>
+          <p><strong data-lugar="ceremonia.lugar"></strong></p>
+          <p class="suave" data-lugar="ceremonia.direccion"></p>
+          <a class="boton boton-suave" data-mapa="ceremonia" target="_blank" rel="noopener">Cómo llegar</a>
+        </article>
+        <article class="tarjeta">
+          <div class="icono-grande">🥂</div>
+          <h3>Celebración</h3>
+          <p class="hora" data-lugar="celebracion.hora"></p>
+          <p><strong data-lugar="celebracion.lugar"></strong></p>
+          <p class="suave" data-lugar="celebracion.direccion"></p>
+          <a class="boton boton-suave" data-mapa="celebracion" target="_blank" rel="noopener">Cómo llegar</a>
+        </article>
+      </div>
+      <div class="acciones">
+        <a class="boton" id="btn-calendario" target="_blank" rel="noopener">📅 Añadir al calendario</a>
+        <button class="boton boton-suave" id="btn-compartir" type="button">💌 Enviar invitación</button>
+      </div>
+
+      <details class="crear-invitacion">
+        <summary>Crear invitación personalizada</summary>
+        <p class="suave">Escribe el nombre del invitado y se genera un enlace que le saludará por su nombre.</p>
+        <div class="fila">
+          <input id="inv-nombre" type="text" placeholder="Ej.: Tíos Juan y Marta" maxlength="80" />
+          <button class="boton" id="inv-generar" type="button">Generar</button>
+        </div>
+        <div id="inv-resultado" class="inv-resultado" hidden>
+          <input id="inv-enlace" type="text" readonly />
+          <div class="acciones">
+            <button class="boton boton-suave" id="inv-copiar" type="button">Copiar enlace</button>
+            <a class="boton" id="inv-whatsapp" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- MENÚ -->
+    <section id="menu" class="seccion seccion-alterna">
+      <h2>Menú</h2>
+      <p class="intro">Elige tu menú al confirmar tu asistencia.</p>
+      <div class="menus" id="lista-menus"></div>
+    </section>
+
+    <!-- CONFIRMAR -->
+    <section id="confirmar" class="seccion">
+      <h2>Confirma tu asistencia</h2>
+      <p class="intro">Por favor, confirma antes del <strong data-evento="fechaLimiteConfirmacion"></strong>.</p>
+
+      <form id="form-rsvp" class="formulario" novalidate>
+        <label>Nombre de la familia o invitado
+          <input name="familia" type="text" required maxlength="80" placeholder="Ej.: Familia García López" />
+        </label>
+
+        <fieldset class="asiste">
+          <legend>¿Vendréis?</legend>
+          <label class="opcion"><input type="radio" name="asiste" value="si" checked /> ¡Sí, allí estaremos! 🎉</label>
+          <label class="opcion"><input type="radio" name="asiste" value="no" /> No podremos ir 😢</label>
+        </fieldset>
+
+        <div id="bloque-personas">
+          <p class="etiqueta">Personas que vienen y su menú</p>
+          <div id="personas"></div>
+          <button type="button" class="boton boton-suave boton-peque" id="btn-anadir">+ Añadir persona</button>
+        </div>
+
+        <label>Alergias o intolerancias
+          <input name="alergias" type="text" maxlength="300" placeholder="Ej.: celíaco, sin frutos secos…" />
+        </label>
+        <label>Teléfono de contacto (opcional)
+          <input name="telefono" type="tel" maxlength="20" />
+        </label>
+        <label>Comentarios
+          <textarea name="comentarios" rows="3" maxlength="500"></textarea>
+        </label>
+
+        <button class="boton boton-grande" type="submit">Enviar confirmación</button>
+        <p class="estado" id="estado-rsvp" role="status"></p>
+      </form>
+    </section>
+
+    <!-- REGALOS -->
+    <section id="regalos" class="seccion seccion-alterna">
+      <h2>Lista de regalos</h2>
+      <p class="intro">Lo más importante es que estéis conmigo. Si queréis hacerme un regalo, aquí tenéis algunas ideas. Reservad el vuestro para que no se repita.</p>
+      <div class="regalos" id="lista-regalos"></div>
+      <p class="aportacion" id="aportacion" hidden></p>
+    </section>
+
+    <!-- MENSAJES -->
+    <section id="mensajes" class="seccion">
+      <h2>Libro de mensajes</h2>
+      <p class="intro">Déjale unas palabras bonitas a Vera para que las guarde de recuerdo.</p>
+      <form id="form-mensaje" class="formulario formulario-mensaje">
+        <input name="nombre" type="text" required maxlength="60" placeholder="Tu nombre" />
+        <textarea name="texto" rows="3" required maxlength="500" placeholder="Tu mensaje para Vera…"></textarea>
+        <button class="boton" type="submit">Enviar mensaje</button>
+        <p class="estado" id="estado-mensaje" role="status"></p>
+      </form>
+      <div class="muro" id="muro"></div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <p>Hecho con cariño para Vera 🤍</p>
+  </footer>
+
+  <!-- Ventana para reservar regalo -->
+  <dialog id="dialogo-regalo">
+    <form method="dialog" id="form-regalo">
+      <h3>Reservar <span id="regalo-nombre"></span></h3>
+      <p class="suave">Solo lo verán los organizadores; al resto les aparecerá como "reservado".</p>
+      <input name="nombre" type="text" required maxlength="80" placeholder="Tu nombre" />
+      <div class="acciones">
+        <button class="boton boton-suave" value="cancelar" formnovalidate>Cancelar</button>
+        <button class="boton" value="ok">Reservar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

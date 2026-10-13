@@ -1,0 +1,69 @@
+rules_version = '2';
+
+// Reglas de seguridad de la web de la comunión de Vera.
+// Los invitados pueden ESCRIBIR confirmaciones y mensajes, y reservar regalos,
+// pero solo los organizadores (lista de abajo) pueden LEER los datos privados.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ⚠️ Pon aquí los mismos correos que en public/js/config.js (admins)
+    function esAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in ['tu-correo@gmail.com'];
+    }
+
+    function texto(campo, max) {
+      return campo is string && campo.size() <= max;
+    }
+
+    // Confirmaciones de asistencia (privadas)
+    match /confirmaciones/{id} {
+      allow create: if request.resource.data.keys().hasOnly(
+                         ['familia', 'asiste', 'personas', 'alergias', 'telefono', 'comentarios', 'fecha'])
+                    && texto(request.resource.data.familia, 80)
+                    && request.resource.data.familia.size() > 0
+                    && request.resource.data.asiste is bool
+                    && request.resource.data.personas is list
+                    && request.resource.data.personas.size() <= 20
+                    && texto(request.resource.data.alergias, 300)
+                    && texto(request.resource.data.telefono, 20)
+                    && texto(request.resource.data.comentarios, 500)
+                    && request.resource.data.fecha == request.time;
+      allow read, update, delete: if esAdmin();
+    }
+
+    // Regalos reservados: público (solo se sabe QUÉ está reservado, no quién)
+    match /reservas/{regalo} {
+      allow read: if true;
+      // "create" solo funciona si el documento no existe: nadie puede pisar una reserva.
+      allow create: if request.resource.data.keys().hasOnly(['fecha'])
+                    && request.resource.data.fecha == request.time
+                    && existsAfter(/databases/$(database)/documents/reservasDetalle/$(regalo));
+      allow update, delete: if esAdmin();
+    }
+
+    // Quién ha reservado cada regalo (privado)
+    match /reservasDetalle/{regalo} {
+      allow create: if request.resource.data.keys().hasOnly(['regalo', 'nombre', 'fecha'])
+                    && request.resource.data.regalo == regalo
+                    && texto(request.resource.data.nombre, 80)
+                    && request.resource.data.nombre.size() > 0
+                    && request.resource.data.fecha == request.time
+                    && existsAfter(/databases/$(database)/documents/reservas/$(regalo));
+      allow read, update, delete: if esAdmin();
+    }
+
+    // Libro de mensajes (público)
+    match /mensajes/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['nombre', 'texto', 'fecha'])
+                    && texto(request.resource.data.nombre, 60)
+                    && request.resource.data.nombre.size() > 0
+                    && texto(request.resource.data.texto, 500)
+                    && request.resource.data.texto.size() > 0
+                    && request.resource.data.fecha == request.time;
+      allow update, delete: if esAdmin();
+    }
+  }
+}

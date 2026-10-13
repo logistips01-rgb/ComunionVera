@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Panel · Comunión de Vera</title>
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="admin">
+    <h1>Panel de organización</h1>
+    <p class="suave">Confirmaciones, menús, regalos y mensajes de la comunión de Vera.</p>
+
+    <div id="acceso">
+      <button class="boton" id="btn-entrar" type="button">Entrar con Google</button>
+      <p class="estado error" id="error-acceso"></p>
+    </div>
+
+    <div id="panel" hidden>
+      <div class="acciones" style="justify-content:flex-start">
+        <button class="boton boton-suave boton-peque" id="btn-recargar" type="button">↻ Actualizar</button>
+        <button class="boton boton-peque" id="btn-csv" type="button">⬇ Descargar Excel (CSV)</button>
+        <button class="boton boton-suave boton-peque" id="btn-salir" type="button">Salir</button>
+      </div>
+
+      <div class="resumen" id="resumen"></div>
+
+      <h2>Confirmaciones</h2>
+      <div class="tabla-scroll"><table id="tabla-confirmaciones"></table></div>
+
+      <h2>Regalos reservados</h2>
+      <div class="tabla-scroll"><table id="tabla-regalos"></table></div>
+
+      <h2>Mensajes</h2>
+      <div class="tabla-scroll"><table id="tabla-mensajes"></table></div>
+    </div>
+  </div>
+
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>
