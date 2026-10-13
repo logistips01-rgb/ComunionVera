@@ -93,4 +93,4 @@ export const aportacion = {
 
 // 6) Álbum compartido de Google Fotos para subir fotos en calidad original.
 //    Pega aquí el enlace para compartir del álbum (déjalo vacío "" para ocultar el botón).
-export const albumGoogleFotos = "";
+export const albumGoogleFotos = "https://photos.app.goo.gl/J7meRz7K8g57YZ7NA";
