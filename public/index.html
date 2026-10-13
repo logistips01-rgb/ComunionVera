@@ -15,10 +15,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
   <script>
-    // Vista previa de estilos: añade ?tema=romantico (o minimalista, celeste, campestre) a la dirección
+    // Aplica el diseño cuanto antes para que no se vea un parpadeo:
+    // ?tema=xxx en la dirección (vista previa) o el último diseño oficial guardado en este navegador.
     (function () {
       var t = new URLSearchParams(location.search).get("tema");
-      if (t && /^[a-z]+$/.test(t)) document.write('<link rel="stylesheet" href="css/temas/' + t + '.css" />');
+      if (t === null) { try { t = localStorage.getItem("vera_tema"); } catch (e) {} }
+      if (t && t !== "clasico" && /^[a-z]+$/.test(t)) document.write('<link id="tema-css" rel="stylesheet" href="css/temas/' + t + '.css" />');
     })();
   </script>
 </head>
@@ -206,6 +208,17 @@
   </dialog>
 
   <a class="boton boton-grande boton-flotante" id="btn-flotante-fotos" href="#fotos" hidden>Subir fotos</a>
+
+  <!-- Selector de diseños (solo si está activado en el panel o con ?disenos) -->
+  <button class="boton-disenos" id="btn-disenos" type="button" hidden>Diseños</button>
+  <div class="panel-disenos" id="panel-disenos" hidden>
+    <div class="panel-disenos-cabecera">
+      <strong>Elige un diseño</strong>
+      <button class="quitar" id="cerrar-disenos" type="button" aria-label="Cerrar"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+    <p class="suave">Toca uno y recorre la web para ver cómo queda.</p>
+    <div class="lista-disenos" id="lista-disenos"></div>
+  </div>
 
   <!-- Visor de fotos con comentarios -->
   <dialog id="visor" class="visor">

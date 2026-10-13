@@ -1,4 +1,4 @@
-import { evento, menus, regalos, aportacion, albumGoogleFotos } from "./config.js";
+import { evento, menus, regalos, aportacion, albumGoogleFotos, temas } from "./config.js";
 import * as datos from "./db.js";
 
 const $ = (sel) => document.querySelector(sel);
@@ -466,3 +466,58 @@ for (const campo of ["#fotos-nombre", '#form-comentario [name="nombre"]', '#form
     try { localStorage.setItem("vera_nombre", nombreRecordado); } catch { /* sin almacenamiento */ }
   });
 }
+
+// ---------- Diseño de la web ----------
+function aplicarTema(id) {
+  let enlace = document.getElementById("tema-css");
+  if (!id || id === "clasico") return enlace?.remove();
+  if (!enlace) {
+    enlace = document.createElement("link");
+    enlace.rel = "stylesheet";
+    enlace.id = "tema-css";
+    document.head.append(enlace);
+  }
+  enlace.href = `css/temas/${id}.css`;
+}
+
+const parametros = new URLSearchParams(location.search);
+let temaVisto = parametros.get("tema"); // diseño que se está viendo ahora mismo
+
+datos
+  .leerAjustes()
+  .then((ajustes) => {
+    const oficial = ajustes.tema || "clasico";
+    try { localStorage.setItem("vera_tema", oficial); } catch { /* sin almacenamiento */ }
+    if (!temaVisto) {
+      temaVisto = oficial;
+      aplicarTema(oficial);
+    }
+    if (ajustes.selector || parametros.has("disenos")) $("#btn-disenos").hidden = false;
+    pintarDisenos();
+  })
+  .catch((err) => console.error(err));
+
+function pintarDisenos() {
+  $("#lista-disenos").innerHTML = temas
+    .map(
+      (t) => `
+      <button type="button" class="opcion-diseno ${t.id === temaVisto ? "activa" : ""}" data-tema="${t.id}">
+        <span class="muestras">${t.colores.map((c) => `<i style="background:${c}"></i>`).join("")}</span>
+        ${t.nombre}
+      </button>`
+    )
+    .join("");
+}
+
+$("#btn-disenos").addEventListener("click", () => {
+  pintarDisenos();
+  $("#panel-disenos").hidden = false;
+});
+$("#cerrar-disenos").addEventListener("click", () => ($("#panel-disenos").hidden = true));
+$("#lista-disenos").addEventListener("click", (e) => {
+  const id = e.target.closest("[data-tema]")?.dataset.tema;
+  if (!id) return;
+  temaVisto = id;
+  aplicarTema(id);
+  pintarDisenos();
+});

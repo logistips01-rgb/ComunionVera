@@ -1,4 +1,4 @@
-import { admins, menus, regalos } from "./config.js";
+import { admins, menus, regalos, temas } from "./config.js";
 import * as datos from "./db.js";
 
 const $ = (sel) => document.querySelector(sel);
@@ -42,6 +42,7 @@ async function cargar() {
     datos.leerComentariosFotos(),
   ]);
   listaFotos = fotos;
+  pintarAjustes(await datos.leerAjustes());
   confirmaciones = conf.sort((a, b) => (a.fecha < b.fecha ? 1 : -1));
 
   // Resumen
@@ -198,4 +199,50 @@ $("#btn-zip").addEventListener("click", async () => {
   a.download = "fotos-comunion-vera.zip";
   a.click();
   estado.textContent = "¡Descargado!";
+});
+
+// Diseño de la web
+let temaElegido = "clasico";
+const urlDisenos = new URL("./?disenos", location.href).href;
+$("#enlace-disenos").href = urlDisenos;
+$("#enlace-disenos").textContent = urlDisenos;
+
+function pintarAjustes(ajustes) {
+  temaElegido = ajustes.tema || "clasico";
+  $("#admin-selector").checked = !!ajustes.selector;
+  pintarOpcionesDiseno();
+}
+
+function pintarOpcionesDiseno() {
+  $("#admin-disenos").innerHTML = temas
+    .map(
+      (t) => `
+      <button type="button" class="opcion-diseno ${t.id === temaElegido ? "activa" : ""}" data-tema="${t.id}">
+        <span class="muestras">${t.colores.map((c) => `<i style="background:${c}"></i>`).join("")}</span>
+        ${esc(t.nombre)}
+      </button>`
+    )
+    .join("");
+}
+
+$("#admin-disenos").addEventListener("click", (e) => {
+  const id = e.target.closest("[data-tema]")?.dataset.tema;
+  if (!id) return;
+  temaElegido = id;
+  pintarOpcionesDiseno();
+  $("#estado-diseno").textContent = "";
+});
+
+$("#btn-guardar-diseno").addEventListener("click", async () => {
+  const estado = $("#estado-diseno");
+  try {
+    await datos.guardarAjustes({ tema: temaElegido, selector: $("#admin-selector").checked });
+    const nombre = temas.find((t) => t.id === temaElegido)?.nombre;
+    estado.textContent = `Guardado. La web ya se ve con el diseño "${nombre}".`;
+    estado.classList.remove("error");
+  } catch (e) {
+    console.error(e);
+    estado.textContent = "No se ha podido guardar.";
+    estado.classList.add("error");
+  }
 });

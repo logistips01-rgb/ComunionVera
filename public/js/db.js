@@ -211,6 +211,25 @@ export async function borrarComentarioFoto(fotoId, id) {
   await lote.commit();
 }
 
+// ---------- Ajustes de la web (diseño elegido, selector visible) ----------
+export async function leerAjustes() {
+  if (modoDemo) {
+    try { return JSON.parse(localStorage.getItem("vera_ajustes")) || {}; } catch { return {}; }
+  }
+  await init();
+  const snap = await fs.getDoc(fs.doc(db, "ajustes", "web"));
+  return snap.data() || {};
+}
+
+export async function guardarAjustes(ajustes) {
+  if (modoDemo) {
+    try { localStorage.setItem("vera_ajustes", JSON.stringify(ajustes)); } catch { /* sin almacenamiento */ }
+    return;
+  }
+  await init();
+  await fs.setDoc(fs.doc(db, "ajustes", "web"), ajustes);
+}
+
 // ---------- Panel de organización ----------
 export async function iniciarSesion() {
   if (modoDemo) return { email: "demo" };

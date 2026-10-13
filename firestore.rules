@@ -17,6 +17,15 @@ service cloud.firestore {
       return campo is string && campo.size() <= max;
     }
 
+    // Ajustes de la web: todos los leen, solo los organizadores los cambian
+    match /ajustes/{doc} {
+      allow read: if true;
+      allow write: if esAdmin()
+                   && request.resource.data.keys().hasOnly(['tema', 'selector'])
+                   && request.resource.data.tema is string
+                   && request.resource.data.selector is bool;
+    }
+
     // Confirmaciones de asistencia (privadas)
     match /confirmaciones/{id} {
       allow create: if request.resource.data.keys().hasOnly(

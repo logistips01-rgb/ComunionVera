@@ -91,3 +91,12 @@ export const aportacion = {
 //    Pega aquí el enlace para compartir del álbum (déjalo vacío "" para ocultar el botón).
 // Oculto de momento. Para volver a mostrarlo, pon: "https://photos.app.goo.gl/J7meRz7K8g57YZ7NA"
 export const albumGoogleFotos = "";
+
+// 7) Diseños disponibles. El definitivo se elige desde el panel de organización.
+export const temas = [
+  { id: "clasico", nombre: "Clásico dorado", colores: ["#fbf8f2", "#e8d9b5", "#b8964f"] },
+  { id: "romantico", nombre: "Romántico", colores: ["#fdf7f5", "#efd3d4", "#b76e79"] },
+  { id: "minimalista", nombre: "Minimalista", colores: ["#ffffff", "#e2e2e2", "#1d1d1d"] },
+  { id: "celeste", nombre: "Celeste", colores: ["#f6f9fc", "#cddff0", "#4a77a3"] },
+  { id: "campestre", nombre: "Campestre", colores: ["#f7f4ec", "#d7dcc2", "#6f7f4f"] },
+];
