@@ -250,3 +250,5 @@ table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 th, td { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--fondo-alt); vertical-align: top; }
 th { background: var(--fondo-alt); font-weight: 700; }
 .admin h2 { text-align: left; font-size: 1.8rem; margin-top: 1rem; }
+.acceso-admin { font-family: var(--sans); font-size: 0.8rem; color: var(--suave); text-decoration: none; }
+.acceso-admin:hover { color: var(--oro); }
