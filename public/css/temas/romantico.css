@@ -1,0 +1,11 @@
+/* Romántico: rosa empolvado y oro rosa */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Parisienne&family=Lato:wght@400;700&display=swap");
+:root {
+  --fondo: #fdf7f5; --fondo-alt: #f8e9e6; --tarjeta: #fffdfc;
+  --texto: #4a3a3c; --suave: #8f7b7d;
+  --oro: #b76e79; --oro-claro: #efd3d4; --salvia: #9aab84; --rosa: #f2d4d7;
+  --halo-1: rgba(242, 196, 202, 0.55); --halo-2: rgba(255, 228, 214, 0.6);
+  --serif: "Playfair Display", Georgia, serif; --script: "Parisienne", cursive; --sans: "Lato", system-ui, sans-serif;
+  --radio: 22px;
+}
+.marco-foto { background: linear-gradient(135deg, #e7b7bd, #fbe9ea, #c98b94); }

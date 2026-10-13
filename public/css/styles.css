@@ -11,6 +11,9 @@
   --error: #b34a3c;
   --sombra: 0 6px 24px rgba(120, 100, 60, 0.12);
   --radio: 18px;
+  --halo-1: rgba(233, 201, 195, 0.45);
+  --halo-2: rgba(143, 165, 138, 0.25);
+  --nombre-fuente: var(--script);
   --serif: "Cormorant Garamond", Georgia, serif;
   --script: "Great Vibes", cursive;
   --sans: "Nunito", system-ui, sans-serif;
@@ -60,14 +63,14 @@ a { color: var(--oro); }
   text-align: center;
   padding: 3rem 1rem 3.5rem;
   background:
-    radial-gradient(circle at 15% 10%, rgba(233, 201, 195, 0.45), transparent 40%),
-    radial-gradient(circle at 85% 30%, rgba(143, 165, 138, 0.25), transparent 40%),
+    radial-gradient(circle at 15% 10%, var(--halo-1), transparent 40%),
+    radial-gradient(circle at 85% 30%, var(--halo-2), transparent 40%),
     var(--fondo);
 }
 .saludo { font-family: var(--serif); font-size: 1.5rem; font-style: italic; margin: 0 0 0.5rem; }
 .subtitulo { letter-spacing: 0.25em; text-transform: uppercase; color: var(--suave); font-size: 0.85rem; margin: 0; }
 .nombre {
-  font-family: var(--script);
+  font-family: var(--nombre-fuente);
   font-weight: 400;
   font-size: clamp(4.5rem, 20vw, 7.5rem);
   color: var(--oro);
@@ -149,7 +152,7 @@ a { color: var(--oro); }
   cursor: pointer; text-decoration: none;
   transition: transform 0.15s, background 0.15s;
 }
-.boton:hover { transform: translateY(-1px); background: #a6843f; }
+.boton:hover { transform: translateY(-1px); filter: brightness(0.93); }
 .boton:disabled { opacity: 0.6; cursor: wait; }
 .boton-suave { background: transparent; color: var(--oro); }
 .boton-suave:hover { background: var(--oro-claro); }
